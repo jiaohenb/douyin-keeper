@@ -2,7 +2,7 @@ name: Douyin-Keeper
 on:
   workflow_dispatch:  # 支持手动一键测试
   schedule:
-    - cron: '24 11 * * *'  # 北京时间每天19:22自动执行
+    - cron: '27 11 * * *'  # 北京时间每天19:22自动执行
 
 jobs:
   run:
