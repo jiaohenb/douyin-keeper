@@ -1,37 +1,39 @@
 import time
-from ..guard import detect_rate_limit
+from playwright.sync_api import Page
+from ..base import BaseSender
 
-def send_exist_chat_message(
-    nickname: str,
-    msg_text: str,
-    page,
-    context,
-    dry_run: bool = False,
-) -> tuple[bool, str]:
-    # 直接使用你这个可用的弹窗私聊地址
-    chat_url = "https://douyin.com/chat?isPopup=1"
-    page.goto(chat_url, wait_until="domcontentloaded", timeout=90000)
-    page.wait_for_timeout(10000)
 
-    # 判断cookie失效跳登录
-    if "passport" in page.url.lower() or "login" in page.url.lower():
-        return False, "Cookie失效，重新抓取www.douyin.com的cookie"
+class NormalChatSender(BaseSender):
+    def send(self, page: Page, nickname: str, content: str) -> tuple[bool, str]:
+        """
+        nickname: 川平
+        content: 要发送的续火花消息
+        """
+        try:
+            # 打开抖音IM主页
+            page.goto("https://www.douyin.com/chat", timeout=60000)
+            page.wait_for_timeout(3000)
 
-    if detect_rate_limit(page):
-        return False, "检测到验证码/操作频繁限制"
+            # 左侧搜索框，搜索好友名字
+            search_input = page.locator('input[placeholder="搜索"]')
+            search_input.wait_for(timeout=15000)
+            search_input.fill(nickname)
+            page.wait_for_timeout(2000)
 
-    # 定位底部【发送消息】输入框
-    try:
-        input_box = page.locator('input[placeholder="发送消息"]').first
-        input_box.wait_for(timeout=20000)
-    except Exception:
-        return False, "找不到发送消息输入框"
+            # 点击匹配出来的好友会话
+            friend_item = page.locator(f"div:has-text('{nickname}')").first
+            friend_item.wait_for(timeout=15000)
+            friend_item.click()
+            page.wait_for_timeout(3000)
 
-    if dry_run:
-        return True, "定位成功"
+            # 定位底部消息输入框
+            msg_input = page.locator('input[placeholder="发送消息"]')
+            msg_input.wait_for(timeout=20000)
+            msg_input.fill(content)
+            page.wait_for_timeout(1000)
+            msg_input.press("Enter")
 
-    input_box.click()
-    input_box.fill(msg_text)
-    page.keyboard.press("Enter")
-    time.sleep(3)
-    return True, "消息发送成功"
+            time.sleep(2)
+            return True, "发送成功"
+        except Exception as e:
+            return False, f"失败：{str(e)}"
