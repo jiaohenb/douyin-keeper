@@ -2,7 +2,7 @@ name: Douyin-Keeper
 on:
   workflow_dispatch:  # 支持手动一键测试
   schedule:
-    - cron: '27 11 * * *'  # 北京时间每天19:22自动执行
+    - cron: '32 11 * * *'  # 北京时间每天19:24自动执行
 
 jobs:
   run:
@@ -20,10 +20,12 @@ jobs:
         with:
           python-version: "3.11"
 
-      - name: 安装依赖
+      - name: 安装依赖 + 安装playwright浏览器
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          playwright install chromium
+          playwright install-deps chromium
 
       - name: 执行一次性续火花脚本
         run: python send_once.py
