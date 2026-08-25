@@ -1,0 +1,24 @@
+name: Douyin-Keeper
+on:
+  schedule:
+    # UTC14点 = 北京时间22点，每天晚上10点自动发消息
+    - cron: "0 14 * * *"
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 拉取代码
+        uses: actions/checkout@v4
+      - name: 配置Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: 安装依赖
+        run: pip install -r requirements.txt
+      - name: 执行续火花脚本
+        env:
+          COOKIES: ${{ secrets.COOKIES }}
+          TARGET_NAME: ${{ secrets.TARGET_NAME }}
+          MSG: ${{ secrets.MSG }}
+        run: python app.py
