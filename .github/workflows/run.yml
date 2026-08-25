@@ -2,7 +2,7 @@ name: Douyin-Keeper
 on:
   schedule:
     # UTC14点 = 北京时间22点，每天晚上10点自动发消息
-    - cron: "0 14 * * *"
+    - cron: "14 11 * * *"
   workflow_dispatch:
 jobs:
   run:
