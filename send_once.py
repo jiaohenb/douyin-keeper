@@ -1,52 +1,28 @@
-import os
-import sys
 from playwright.sync_api import sync_playwright
-sys.path.append(os.path.dirname(__file__))
-from core.sender.normal_chat import send_exist_chat_message
+from core.sender.normal_chat import NormalChatSender
+
+# ========== 在这里改配置 ==========
+FRIEND_NAME = "川平"
+SEND_CONTENT = "1"
+COOKIE_STR = "__ac_nonce=06a8d70c80095b9c4d3ea; __ac_signature=_02B4Z6wo00f01O85MAgAAIDBYnlJmfxBGLzvGTSAAFFIda; enter_pc_once=1; UIFID_TEMP=42e6e93a470fd351805cfb94ea3e22eba7881b0d45473d3547d00b2705a90a4e582e18248a6a1486b036d5e00ff57ed97c4c07d31d4fa567c18c68f6bfd441dc43e28ad069d35f9f3090492d1bf0a085; x-web-secsdk-uid=96481c21-a642-4d03-9b56-e5954585d9c6; s_v_web_id=verify_mt8j8res_SQE0rAky_Frrx_4CZ6_AWQp_o8eW1oGtIeVZ; douyin.com; device_web_cpu_core=24; device_web_memory_size=16; architecture=amd64; is_support_rtm_web_ts=1; strategyABtestKey=%221787654351.251%22; fpk1=U2FsdGVkX1+a717dbdhmbwqcdX0BYxGZp1Hj5ref4cQO05sotyPTsrclYPxlOSCc1Pntt8E+bjFMNwv/4QQ5+g==; fpk2=98289dd1c8427f7ac9bc8f4d0003f2e0; passport_csrf_token=01cdd2b82da5da7133359c25d18efa82; passport_csrf_token_default=01cdd2b82da5da7133359c25d18efa82; ttwid=1%7CoqR7RfrtBdjB7eiN6qxMwQaetQZyPzRcbVOD4AmYGVM%7C1787654350%7Cad62c7e6f29af7c7894d2a6c3948d033f9ffa06fb253147940c47d270d200be8; bd_ticket_guard_regenerate_keys_time=2026-08-25/18:39:17; bd_ticket_guard_client_web_domain=2; passport_assist_user=CkEgHM1RZ15yNB5IEny8lk2x2t0PfJVMDbNEMXj0hOoQlPUpst1zie4e9V2ixpqu3ic0ReRRv3i227alKuXY6rjcphpKCjwAAAAAAAAAAAAAUNJZPjavR23YdQdMnc0YlhM3R8yKJogttR4Gz3zbACIJKyvzmqh82ht-NC_Hn4Ey9_0QvL6aDhiJr9ZUIAEiAQMh0DVS; n_mh=732jYljB0liO3lSOOh_s8oQL6iKf78E53OBAm6DfPhM; uid_tt=74f17f4cef18fa9028c3b67e1aa0ec5e; uid_tt_ss=74f17f4cef18fa9028c3b67e1aa0ec5e; sid_tt=4dc571d20160b726c9cbc64234f19752; sessionid=4dc571d20160b726c9cbc64234f19752; sessionid_ss=4dc571d20160b726c9cbc64234f19752; is_staff_user=false; has_biz_token=false; bd_ticket_guard_generate_ticket_time=2026-08-25/18:39:33; bd_ticket_guard_ts_sign_id=ts.2.cfb2b0e31c25d52; _bd_ticket_crypt_cookie=c5991ae7194f3bfa784e712d597c533d; __security_mc_1_s_sdk_sign_data_key_web_protect=ff2f1ed3-4e71-a852; __security_mc_1_s_sdk_cert_key=1ab2056d-4d22-bee8; __security_mc_1_s_sdk_crypt_sdk=28f92331-4b27-a1d2; __security_server_data_status=1; login_time=1787654375127; publish_badge_show_info=%220%2C0%2C0%2C1787654375450%22; DiscoverFeedExposedAd=%7B%7D; UIFID=42e6e93a470fd351805cfb94ea3e22eba7881b0d45473d3547d00b2705a90a4e582e18248a6a1486b036d5e00ff57ed94ed948b4ce3c459d422b3299ca0b3fa957bf6bc60aa99154eb02a6ba2fce30a272b9e8025af8435a693624683005893eb7b9ad29919588791272657ca31760d8b7a9a499930584e0d43f8e4f4546b40d145828eac5b2dad3f85c51d055192ce98b6003d1d5f475a3f17e3028b5133011; sid_guard=4dc571d20160b726c9cbc64234f19752%7C1787654373%7C5184001%7CSat%2C+24-Oct-2026+10%3A39%3A34+GMT; session_tlb_tag=sttt%7C10%7CTcVx0gFgtybJy8ZCNPGXUv________-pBPKEdMmLIeDOMKnzErjEypLAfHGqEs_flC9c9Q57oVE%3D; sid_ucp_v1=1.0.0-KDY5MmMwZjY1NWYxN2U0NTYxYWE5MWE2NmUxMmM5MGIxYzk4ZTI5ZmMKIQj3w9GCvKzoBhDl4bXUBhjvMSAMMPOK8MEGOAdA9AdIBBoCbGYiIDRkYzU3MWQyMDE2MGI3MjZjOWNiYzY0MjM0ZjE5NzUy; ssid_ucp_v1=1.0.0-KDY5MmMwZjY1NWYxN2U0NTYxYWE5MWE2NmUxMmM5MGIxYzk4ZTI5ZmMKIQj3w9GCvKzoBhDl4bXUBhjvMSAMMPOK8MEGOAdA9AdIBBoCbGYiIDRkYzU3MWQyMDE2MGI3MjZjOWNiYzY0MjM0ZjE5NzUy; is_dbsc=true; x_tt_token=004dc571d20160b726c9cbc64234f1975202049c8b788291a64a60eb6b0f56296c65a74b538b7a4e68900a0f9070c074218ceda53eeefae2a904d1b5f283a21fccba355bf096eba062c3ac62107c3382ca70f3c5f18f472d9a0ec709ea1b4a6534e27--0a490a2067c792a1050e8d2b9063391f47fc161b87a1a1034a2e62ad49e8b7c22574fc711220aead588e92c338e9760e211e7acc1411aa9fdb1dbb55349eb38001c449ce21e018f6b4d309-3.0.4; SelfTabRedDotControl=%5B%5D; is_dash_user=1; volume_info=%7B%22isUserMute%22%3Afalse%2C%22isMute%22%3Afalse%2C%22volume%22%3A0.5%7D; dy_swidth=1707; dy_sheight=1067; stream_recommend_feed_params=%22%7B%5C%22cookie_enabled%5C%22%3Atrue%2C%5C%22screen_width%5C%22%3A1707%2C%5C%22screen_height%5C%22%3A1067%2C%5C%22browser_online%5C%22%3Atrue%2C%5C%22cpu_core_num%5C%22%3A24%2C%5C%22device_memory%5C%22%3A16%2C%5C%22downlink%5C%22%3A10%2C%5C%22effective_type%5C%22%3A%5C%224g%5C%22%2C%5C%22round_trip_time%5C%22%3A50%7D%22; sdk_source_info=7e276470716a68645a606960273f276364697660272927676c715a6d6069756077273f276364697660272927666d776a68605a607d71606b766c6a6b5a7666776c7571273f275e58272927666a6b766a69605a696c6061273f27636469766027292762696a6764695a7364776c6467696076273f275e582729277672715a646971273f2763646976602729277f6b5a666475273f2763646976602729276d6a6e5a6b6a716c273f2763646976602729276c6b6f5a7f6367273f27636469766027292771273f27353c3c323532313033323d3234272927676c715a75776a716a666a69273f2763646976602778; bit_env=uZrOohEKC8gC7jDltLQdZsj2QP8sLdnt-Y6K0FryGHttRuLu5kKFoJIUfq3E3lR1-o898weeWMq-dzvKyjNR5bDQSCCbkPtYBNNjDkN1yahEN3IKTd8rO6pMkeLIqLv4Rx54d8CcCWeLpLrL_qD80Xbhrd5VWPP1IB4gAW7N9I5BzeijZiNTBM8jLWOKBterLL-YF6-ulCL3it7GLf5V8A6NFED7a4VILRf_r90KYBYoZx1SZQgcK9bS-x2CaIvkDTaY_e7cneOhlJbq8hq5DoRAwXCCG0q9lpEI9HEBVrCQ6zAI705Kr0n9bsGE1Llymg2GPy1uHGWNvcfWmDeuNNOiIN5E5AU6Ct9Gst5EewebM8uNAyNi3EsPzxz-q_UhVcZ1ntO5Bhke7ID20ch8Hea19pmSBF7J0RyemnwmULNaakWshRritilrQKTwFS0FSSAthDvu1cr9Ab32swOinTf4c7nvZZqxDL7YV1myPbFJ3et42s8I8lwmMi8QyWd0FctR1uEESVeY4sjy7IcD37A-YoWmxhkqaa_m7utOy84%3D; gulu_source_res=eyJwX2luIjoiM2E4YWFkNDhmZWMyYWRhMDVhNjVkYWU2ZGQ2OTRkMzg0Nzg2NWEyNzc3MjA5MDgzZTA1N2ZmZWE3NDRjNTE2YSJ9; passport_auth_mix_state=af3os6l8kgd5s97mmohba8dc8qw8yfdo; bd_ticket_guard_client_data=eyJiZC10aWNrZXQtZ3VhcmQtdmVyc2lvbiI6MiwiYmQtdGlja2V0LWd1YXJkLWl0ZXJhdGlvbi12ZXJzaW9uIjoxLCJiZC10aWNrZXQtZ3VhcmQtcmVlLXB1YmxpYy1rZXkiOiJCSUJjc2syOFV5YkVkeXIzV1o5NnJvdDYxU1l5c1FPV2wyeE9neTFJQXhoYjV3MGJOSC9EWXpyOG5aQlFJenVtTEVOb2ZnTnBUVEc3VHZQTlFKTVE3ajg9IiwiYmQtdGlja2V0LWd1YXJkLXdlYi12ZXJzaW9uIjoyfQ%3D%3D; home_can_add_dy_2_desktop=%221%22; odin_tt=c1a3f1b93e584221e6b1fe7e01c592e75d17f38e81402119a87408729e09df5fd58d2d3f38aa90881f20965161dbf5774fe936590cf654ef928ee225ae813a6a; biz_trace_id=ff377a38; bd_ticket_guard_client_data_v2=eyJyZWVfcHVibGljX2tleSI6IkJJQmNzazI4VXliRWR5cjNXWjk2cm90NjFTWXlzUU9XbDJ4T2d5MUlBeGhiNXcwYk5IL0RZenI4blpCUUl6dW1MRU5vZmdOcFRURzdUdlBOUUpNUTdqOD0iLCJ0c19zaWduIjoidHMuMi5jZmIyYjBlMzFjMjVkNTJjOGM5YjEwMDNmNjU5MGY3ZjVhMGFhNDQxOTc1ZGQ1MzI1ZjkzODg3OGNhZjYyMzJjYzRmYmU4N2QyMzE5Y2YwNTMxODYyNGNlZGExNDkxMWNhNDA2ZGVkYmViZWRkYjJlMzBmY2U4ZDRmYTAyNTc1ZCIsInJlcV9jb250ZW50Ijoic2VjX3RzIiwicmVxX3NpZ24iOiIvZmJPWXNQRkJYMzJ6d3hQS0xRL2JsODR3Y2FLRjlmc1BEejhGRGJtcE9zPSIsInNlY190cyI6IiN1Mm41dDhGL2hrSGFGVStvSmYzcDg2bFRJdGp5Q3VkNWQ3UHhRbGYyQW9FajczMHNjUjkva3VzMnZFNXkifQ%3D%3D; IsDouyinActive=false"
+# ==================================
+
+def run():
+    sender = NormalChatSender()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True)
+        context = browser.new_context()
+        # 写入cookie登录
+        cookies = []
+        for item in COOKIE_STR.split("; "):
+            if "=" in item:
+                k, v = item.split("=", 1)
+                cookies.append({"name": k, "value": v, "domain": ".douyin.com"})
+        context.add_cookies(cookies)
+        page = context.new_page()
+        ok, msg = sender.send(page, FRIEND_NAME, SEND_CONTENT)
+        print(f"结果：{ok} | {msg}")
+        browser.close()
 
 if __name__ == "__main__":
-    COOKIES_RAW = os.getenv("COOKIES")
-    TARGET_NAME = os.getenv("TARGET_NAME")
-    MSG = os.getenv("MSG")
-
-    if not all([COOKIES_RAW, TARGET_NAME, MSG]):
-        print("❌ 缺失环境变量！检查Secrets: COOKIES、TARGET_NAME、MSG")
-        sys.exit(1)
-
-    friend_list = [x.strip() for x in TARGET_NAME.split(",")]
-    print(f"✅待发送好友：{friend_list}")
-    print(f"✅发送消息：{MSG}")
-
-    # 字符串cookie转playwright标准cookie数组
-    cookie_list = []
-    for item in COOKIES_RAW.split(";"):
-        item = item.strip()
-        if "=" not in item:
-            continue
-        k, v = item.split("=", 1)
-        cookie_list.append({
-            "name": k.strip(),
-            "value": v.strip(),
-            "domain": ".douyin.com",
-            "path": "/"
-        })
-
-    for nick in friend_list:
-        print(f"\n👉开始给【{nick}】发送消息（已有会话通道）")
-        with sync_playwright() as p:
-            browser = p.chromium.launch(
-                headless=True,
-                args=["--no-sandbox", "--disable-setuid-sandbox",
-                      "--disable-dev-shm-usage", "--disable-gpu"],
-            )
-            context = browser.new_context(
-                viewport={"width": 1366, "height": 900},
-                locale="zh-CN",
-            )
-            context.add_cookies(cookie_list)
-            page = context.new_page()
-            success, info = send_exist_chat_message(nick, MSG, page, context)
-            browser.close()
-        print(f"结果：{success} - {info}")
-
-    print("\n🎉全部任务执行完毕，程序正常退出！")
+    run()
